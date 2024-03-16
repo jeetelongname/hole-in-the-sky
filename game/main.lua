@@ -49,6 +49,47 @@ function love.load()
   -- -- set the background color to a nice blue
   love.graphics.setBackgroundColor(0.41, 0.53, 0.97)
   love.window.setMode(650, 650) -- set the window dimensions to 650 by 650
+
+  -- Adding random rectangular blocks--
+  objects.blockOddRow1 = {}
+  objects.blockOddRow1.body = love.physics.newBody(World, 10, 10, "dynamic")
+  objects.blockOddRow1.shape = love.physics.newRectangleShape(100, 0, 50, 100, 90)
+  objects.blockOddRow1.fixture = love.physics.newFixture(objects.blockOddRow1.body, objects.blockOddRow1.shape, 0.2)
+  objects.blockOddRow1.body:setLinearDamping(0.999)
+
+  objects.blockOddRow2 = {}
+  objects.blockOddRow2.body = love.physics.newBody(World, 15, 15, "dynamic")
+  objects.blockOddRow2.shape = love.physics.newRectangleShape(300, 0, 50, 100, 90)
+  objects.blockOddRow2.fixture = love.physics.newFixture(objects.blockOddRow2.body, objects.blockOddRow2.shape, 0.2)
+  objects.blockOddRow2.body:setLinearDamping(0.9)
+  
+  objects.blockOddRow3 = {}
+  objects.blockOddRow3.body = love.physics.newBody(World, 20, 20, "dynamic")
+  objects.blockOddRow3.shape = love.physics.newRectangleShape(500, 0, 50, 100, 90)
+  objects.blockOddRow3.fixture = love.physics.newFixture(objects.blockOddRow3.body, objects.blockOddRow3.shape, 0.2)
+  objects.blockOddRow3.body:setLinearDamping(0.999)
+
+  ------------------------------------------------------------
+  objects.blockEvenRow1 = {}
+  objects.blockEvenRow1.body = love.physics.newBody(World, 25, 25, "dynamic")
+  objects.blockEvenRow1.shape = love.physics.newRectangleShape(200, 0, 50, 100)
+  objects.blockEvenRow1.fixture = love.physics.newFixture(objects.blockEvenRow1.body, objects.blockEvenRow1.shape, 0.2)
+  objects.blockEvenRow1.body:setLinearDamping(0.999)
+
+  objects.blockEvenRow2 = {}
+  objects.blockEvenRow2.body = love.physics.newBody(World, 30, 30, "dynamic")
+  objects.blockEvenRow2.shape = love.physics.newRectangleShape(400, 0, 50, 100)
+  objects.blockEvenRow2.fixture = love.physics.newFixture(objects.blockEvenRow2.body, objects.blockEvenRow2.shape, 0.2)
+  objects.blockEvenRow2.body:setLinearDamping(0.9)
+  x
+  objects.blockEvenRow3 = {}
+  objects.blockEvenRow3.body = love.physics.newBody(World, 35, 35, "dynamic")
+  objects.blockEvenRow3.shape = love.physics.newRectangleShape(600, 0, 50, 100)
+  objects.blockEvenRow3.fixture = love.physics.newFixture(objects.blockEvenRow3.body, objects.blockEvenRow3.shape, 0.2)
+  objects.blockEvenRow3.body:setLinearDamping(0.999)
+  
+
+  
 end
 
 
@@ -85,4 +126,15 @@ function love.draw()
   draw_fixture(objects.player1)
   love.graphics.setColor(0, 1, 0)
   draw_fixture(objects.player2)
+
+  draw_fixture(objects.blockOddRow1)
+  draw_fixture(objects.blockOddRow2)
+  draw_fixture(objects.blockOddRow3)
+
+  draw_fixture(objects.blockEvenRow1)
+  draw_fixture(objects.blockEvenRow2)
+  draw_fixture(objects.blockEvenRow3)
+
+  love.graphics.setColor(0, 1, 1)
+
 end
