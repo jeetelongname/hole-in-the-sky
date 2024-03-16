@@ -1,5 +1,18 @@
 local objects = {} -- table to hold all our physical objects
 
+local function make_wall(world, x, y, width, height)
+  local wall = {}
+  wall.body = love.physics.newBody(world, x, y, "static")
+  wall.shape = love.physics.newRectangleShape(width, height)
+  wall.fixture = love.physics.newFixture(wall.body, wall.shape)
+
+  return wall
+end
+
+local function draw_wall(wall)
+  love.graphics.polygon("fill", wall.body:getWorldPoints(wall.shape:getPoints()))
+end
+
 function love.load()
   -- the height of a meter our worlds will be 64px
   love.physics.setMeter(64)
@@ -7,17 +20,11 @@ function love.load()
   -- of 0 and vertical gravity of 9.81
   World = love.physics.newWorld(0, 9.81*64, true)
 
-
   -- let's create the ground
-  objects.ground = {}
-  -- remember, the shape (the rectangle we create next) anchors to the
-  -- body from its center, so we have to move it to (650/2, 650-50/2)
-  objects.ground.body = love.physics.newBody(World, 650/2, 650-50/2)
-  -- make a rectangle with a width of 650 and a height of 50
-  objects.ground.shape = love.physics.newRectangleShape(650, 50)
-  -- attach shape to body
-  objects.ground.fixture = love.physics.newFixture(objects.ground.body,
-                                                   objects.ground.shape)
+  objects.ground = make_wall(World, 650/2, 650-10/2, 650, 10)
+  objects.ceiling = make_wall(World, 650/2, 0, 650, 10)
+  objects.wall1 = make_wall(World, 0, (650/2), 10, 650)
+  objects.wall2 = make_wall(World, 650, (650/2), 10, 650)
 
   -- let's create a ball
   objects.ball = {}
@@ -29,27 +36,27 @@ function love.load()
   -- Attach fixture to body and give it a density of 1.
   objects.ball.fixture = love.physics.newFixture(objects.ball.body,
                                                  objects.ball.shape, 1)
-  objects.ball.fixture:setRestitution(1) -- let the ball bounce
+  objects.ball.fixture:setRestitution(1.5) -- let the ball bounce
 
-  -- let's create a couple blocks to play around with
-  objects.block1 = {}
-  objects.block1.body = love.physics.newBody(World, 200, 550, "dynamic")
-  objects.block1.shape = love.physics.newRectangleShape(0, 0, 50, 100)
-  -- A higher density gives it more mass.
-  objects.block1.fixture = love.physics.newFixture(objects.block1.body,
-                                                   objects.block1.shape, 5)
+  -- -- let's create a couple blocks to play around with
+  -- objects.block1 = {}
+  -- objects.block1.body = love.physics.newBody(World, 200, 550, "dynamic")
+  -- objects.block1.shape = love.physics.newRectangleShape(0, 0, 50, 100)
+  -- -- A higher density gives it more mass.
+  -- objects.block1.fixture = love.physics.newFixture(objects.block1.body,
+  --                                                  objects.block1.shape, 5)
 
 
-  objects.block2 = {}
-  objects.block2.body = love.physics.newBody(World, 200, 400, "dynamic")
-  objects.block2.shape = love.physics.newRectangleShape(0, 0, 100, 50)
-  objects.block2.fixture = love.physics.newFixture(objects.block2.body,
-                                                   objects.block2.shape, 2)
+  -- objects.block2 = {}
+  -- objects.block2.body = love.physics.newBody(World, 200, 400, "dynamic")
+  -- objects.block2.shape = love.physics.newRectangleShape(0, 0, 100, 50)
+  -- objects.block2.fixture = love.physics.newFixture(objects.block2.body,
+  --                                                  objects.block2.shape, 2)
 
-  objects.block1.fixture:setRestitution(1)
-  objects.block2.fixture:setRestitution(1)
-  -- initial graphics setup
-  -- set the background color to a nice blue
+  -- objects.block1.fixture:setRestitution(1)
+  -- objects.block2.fixture:setRestitution(1)
+  -- -- initial graphics setup
+  -- -- set the background color to a nice blue
   love.graphics.setBackgroundColor(0.41, 0.53, 0.97)
   love.window.setMode(650, 650) -- set the window dimensions to 650 by 650
 end
@@ -78,18 +85,13 @@ function love.draw()
   -- set the drawing color to green for the ground
   love.graphics.setColor(0.28, 0.63, 0.05)
   -- draw a "filled in" polygon using the ground's coordinates
-  love.graphics.polygon("fill", objects.ground.body:getWorldPoints(
-                           objects.ground.shape:getPoints()))
+  draw_wall(objects.ceiling)
+  draw_wall(objects.ground)
+  draw_wall(objects.wall1)
+  draw_wall(objects.wall2)
 
   -- set the drawing color to red for the ball
   love.graphics.setColor(0.76, 0.18, 0.05)
   love.graphics.circle("fill", objects.ball.body:getX(),
                        objects.ball.body:getY(), objects.ball.shape:getRadius())
-
-  -- set the drawing color to grey for the blocks
-  love.graphics.setColor(0.20, 0.20, 0.20)
-  love.graphics.polygon("fill", objects.block1.body:getWorldPoints(
-                           objects.block1.shape:getPoints()))
-  love.graphics.polygon("fill", objects.block2.body:getWorldPoints(
-                           objects.block2.shape:getPoints()))
 end
