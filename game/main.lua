@@ -22,10 +22,10 @@ function love.load()
   World = love.physics.newWorld(0, 9.81*64, true)
 
   -- let's create the ground
-  objects.ground = make_wall(World, 650/2, 650-10/2, 650, 10)
-  objects.ceiling = make_wall(World, 650/2, 0, 650, 10)
-  objects.wall1 = make_wall(World, 0, (650/2), 10, 650)
-  objects.wall2 = make_wall(World, 650, (650/2), 10, 650)
+  objects.ground = make_wall(World, center, 650-10/2, 650, 10)
+  objects.ceiling = make_wall(World, center, 0, 650, 10)
+  objects.wall1 = make_wall(World, 0, center, 10, 650)
+  objects.wall2 = make_wall(World, 650, center, 10, 650)
 
   objects.player1 = {}
   objects.player1.body = love.physics.newBody(World, center, center, "dynamic")
@@ -43,7 +43,7 @@ function love.load()
   objects.player2.fixture = love.physics.newFixture(objects.player2.body, objects.player2.shape, 1)
 
   Player_joint = love.physics.newRevoluteJoint(objects.player1.body, objects.player2.body , center, center, true )
-  Player_joint:setLimitsEnabled(true)
+  Player_joint:setLimitsEnabled(false)
 
   -- -- initial graphics setup
   -- -- set the background color to a nice blue
@@ -55,27 +55,40 @@ end
 function love.update(dt)
   World:update(dt) -- this puts the world into motion
   local isDown = love.keyboard.isDown
-  -- here we are going to create some keyboard events
-  -- press the right arrow key to push the ball to the right
+
+  -- Force is applied to player 1
+  if isDown("d") then
+    objects.player1.body:applyForce(400, 0)
+  end
+  if isDown("a") then
+    objects.player1.body:applyForce(-400, 0)
+  end
+  if isDown("w") then
+    objects.player1.body:applyForce(0, -400)
+  end
+  if isDown("s") then
+    objects.player1.body:applyForce(0, 400)
+  end
+
+  -- Force is applied to player 2
   if isDown("right") then
     objects.player2.body:applyForce(400, 0)
-  elseif isDown("left") then
+  end
+  if isDown("left") then
     objects.player2.body:applyForce(-400, 0)
-  elseif isDown("up") then
+  end
+  if isDown("up") then
     objects.player2.body:applyForce(0, -400)
-  elseif isDown("down") then
+  end
+  if isDown("down") then
     objects.player2.body:applyForce(0, 400)
   end
 
-  if isDown("d") then
-    objects.player1.body:applyForce(400, 0)
-  elseif isDown("a") then
-    objects.player1.body:applyForce(-400, 0)
-  elseif isDown("w") then
-    objects.player1.body:applyForce(0, -400)
-  elseif isDown("s") then
-    objects.player1.body:applyForce(0, 400)
+  for k, v in ipairs(World:getContacts()) do
+    print(k, v)
+
   end
+
 end
 
 function love.draw()
